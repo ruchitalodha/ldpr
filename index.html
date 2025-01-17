@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Long Distance PyaaR</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.js"></script>
+    <title>LDPR - Bestie Scheduler</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.js"></script>
     <style>
         :root {
             --hot-pink: #FF1493;
@@ -17,7 +17,6 @@
             --border-color: #333333;
         }
 
-        /* Previous styles remain the same until .fc-event */
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
@@ -113,6 +112,62 @@
             box-shadow: 0 0 20px rgba(255, 20, 147, 0.5);
         }
 
+        #calendar {
+            height: 600px;
+            margin-top: 20px;
+            background: var(--dark-bg);
+            padding: 10px;
+        }
+
+        .fc {
+            background-color: var(--dark-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color) !important;
+            height: 100%;
+        }
+
+        .fc-theme-standard td, 
+        .fc-theme-standard th {
+            border-color: var(--border-color) !important;
+        }
+
+        .fc-scrollgrid {
+            border-color: var(--border-color) !important;
+        }
+
+        .fc-day-today {
+            background-color: rgba(255, 20, 147, 0.1) !important;
+        }
+
+        .fc-button-primary {
+            background-color: var(--darker-bg) !important;
+            border-color: var(--hot-pink) !important;
+            color: var(--hot-pink) !important;
+        }
+
+        .fc-button-primary:hover {
+            background-color: var(--hot-pink) !important;
+            color: white !important;
+        }
+
+        .fc-button-active {
+            background-color: var(--hot-pink) !important;
+            color: white !important;
+        }
+
+        .fc-timegrid-slot {
+            height: 40px !important;
+            color: var(--light-text);
+        }
+
+        .fc-timegrid-axis {
+            color: var(--light-text);
+        }
+
+        .fc-col-header-cell {
+            color: var(--light-text);
+        }
+
         .event-modal {
             display: none;
             position: fixed;
@@ -161,42 +216,6 @@
             bottom: 0;
             background-color: rgba(0,0,0,0.7);
             z-index: 999;
-        }
-
-        /* Calendar styles remain the same */
-        .fc {
-            background-color: var(--dark-bg);
-            border-radius: 8px;
-            border: 1px solid var(--border-color) !important;
-        }
-
-        .fc-theme-standard td, 
-        .fc-theme-standard th {
-            border-color: var(--border-color) !important;
-        }
-
-        .fc-scrollgrid {
-            border-color: var(--border-color) !important;
-        }
-
-        .fc-day-today {
-            background-color: rgba(255, 20, 147, 0.1) !important;
-        }
-
-        .fc-button-primary {
-            background-color: var(--darker-bg) !important;
-            border-color: var(--hot-pink) !important;
-            color: var(--hot-pink) !important;
-        }
-
-        .fc-button-primary:hover {
-            background-color: var(--hot-pink) !important;
-            color: white !important;
-        }
-
-        .fc-button-active {
-            background-color: var(--hot-pink) !important;
-            color: white !important;
         }
 
         @media (max-width: 600px) {
@@ -278,6 +297,8 @@
                 initialView: 'timeGridWeek',
                 slotMinTime: '00:00:00',
                 slotMaxTime: '24:00:00',
+                height: '100%',
+                handleWindowResize: true,
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
@@ -299,6 +320,11 @@
             // Load saved events
             loadEvents();
             calendar.render();
+            
+            // Force resize after render
+            setTimeout(() => {
+                window.dispatchEvent(new Event('resize'));
+            }, 100);
         });
 
         function switchUser(user) {
@@ -365,6 +391,7 @@
             localStorage.setItem('ldprEvents', JSON.stringify(events));
         }
 
+        // Add Event Handler
         document.getElementById('setAvailability').addEventListener('click', function() {
             const startInMinutes = parseInt(document.getElementById('startIn').value);
             const durationMinutes = parseInt(document.getElementById('duration').value);
