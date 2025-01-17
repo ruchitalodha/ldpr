@@ -235,11 +235,11 @@
 </head>
 <body>
     <div class="container">
-        <h1>🌟 LDPR - Bestie Time Scheduler 🌟</h1>
+        <h1>🌟 Long Distance PyaaR 🌟</h1>
         
         <div class="user-controls">
-            <button id="ruchitaButton" class="user-button active">Ruchita (SF)</button>
-            <button id="paridhiButton" class="user-button">Paridhi (London)</button>
+            <button id="ruchitaButton" class="user-button active">Ruchita's Calender</button>
+            <button id="paridhiButton" class="user-button">Paridhi's Calender</button>
         </div>
 
         <div class="controls">
@@ -257,7 +257,9 @@
         <div id="calendar"></div>
 
         <div class="time-zone-info">
-            <p>🌍 Time zones: San Francisco (PST) | London (GMT)</p>
+             <p>🌍 Time zones:</p>
+             <p>San Francisco (PST): <span class="time" id="sf-time">Loading...</span></p>
+             <p>London (GMT): <span class="time" id="london-time">Loading...</span></p>
         </div>
     </div>
 
@@ -272,6 +274,32 @@
 
     <div class="overlay" id="overlay"></div>
 
+     <script>
+        function updateTime() {
+            const sfTimeElement = document.getElementById('sf-time');
+            const londonTimeElement = document.getElementById('london-time');
+
+            // Get current time in UTC
+            const now = new Date();
+
+            // Calculate SF time (UTC - 8)
+            const sfOffset = -8; // PST
+            const sfTime = new Date(now.getTime() + sfOffset * 3600 * 1000);
+            const sfTimeString = sfTime.toUTCString().slice(17, 25);
+
+            // Calculate London time (UTC + 0)
+            const londonTimeString = now.toUTCString().slice(17, 25);
+
+            // Update the DOM
+            sfTimeElement.textContent = sfTimeString;
+            londonTimeElement.textContent = londonTimeString;
+        }
+
+        // Update the time every second
+        setInterval(updateTime, 1000);
+        updateTime(); // Initial call
+    </script>
+     
     <script>
         let currentUser = 'Ruchita';
         let calendar;
