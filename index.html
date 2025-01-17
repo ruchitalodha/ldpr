@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LDPR - Bestie Scheduler</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.js"></script>
+    <!-- FullCalendar Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.10/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.10/index.global.min.js"></script>
     <style>
         :root {
             --hot-pink: #FF1493;
@@ -292,40 +295,35 @@
             overlay.addEventListener('click', closeEventModal);
 
             // Initialize calendar
-            let calendarEl = document.getElementById('calendar');
-            calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'timeGridWeek',
-                slotMinTime: '00:00:00',
-                slotMaxTime: '24:00:00',
-                height: '100%',
-                handleWindowResize: true,
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'timeGridWeek,timeGridDay'
-                },
-                eventClick: handleEventClick,
-                eventContent: function(arg) {
-                    const backgroundColor = arg.event.extendedProps.user === 'Ruchita' ? 
-                        'var(--hot-pink)' : 'var(--bestie-purple)';
-                    return {
-                        html: `<div style="padding: 4px; background-color: ${backgroundColor};">
-                            <strong>${arg.event.title}</strong><br>
-                            <small>${arg.event.extendedProps.localTime}</small>
-                        </div>`
-                    };
+              document.addEventListener('DOMContentLoaded', function() {
+            try {
+                const calendarEl = document.getElementById('calendar');
+                if (!calendarEl) {
+                    console.error('Calendar element not found');
+                    return;
+                }
+        
+                calendar = new FullCalendar.Calendar(calendarEl, {
+                    // ... rest of the calendar options remain the same
+                });
+        
+                if (!calendar) {
+                    console.error('Failed to initialize calendar');
+                    return;
+                }
+
+                    // Load saved events
+                    loadEvents();
+                    calendar.render();
+                    
+                    // Force resize after render
+                    setTimeout(() => {
+                        window.dispatchEvent(new Event('resize'));
+                    }, 100);
+                } catch (error) {
+                    console.error('Error initializing calendar:', error);
                 }
             });
-
-            // Load saved events
-            loadEvents();
-            calendar.render();
-            
-            // Force resize after render
-            setTimeout(() => {
-                window.dispatchEvent(new Event('resize'));
-            }, 100);
-        });
 
         function switchUser(user) {
             currentUser = user;
